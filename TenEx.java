@@ -14,6 +14,13 @@ public class TenEx implements IAlgorithm {
 		return result;
 	}
 	
+	public static double Calculate2(List<Double> values){
+		double number = values.get(0);
+		//need to change naturalExp to public
+		double result2 = NaturalExponential.naturalExp(number * LN10);
+		return result2;
+	}
+	
 	public static void main(String[] args){
 		
 		
@@ -28,5 +35,10 @@ public class TenEx implements IAlgorithm {
 		double result = TenEx.Calculate(values);
 		
 		System.out.println("Actual result is " + result + " and expected result is " + expectedResult);
+		
+		System.out.println("And now using the natural exponent class");
+		double result2 = TenEx.Calculate2(values);
+		System.out.println("Actual result using homemade e^x method is "+ result);
+		
 	}
 }
