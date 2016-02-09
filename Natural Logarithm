@@ -1,0 +1,54 @@
+/**
+ * COMP 5541 - TOOLS AND TECHNIQUES FOR SOFTWARE ENGINEERING
+ * 
+ * @author Shuai Chen, zacchenshuai@gmail.com;
+ *
+ * Class NaturalLogarithm 
+ * Implements the Natural Logarithm Algorithm
+ *
+ * $Revision: 1.0 $
+ * $Last Revision Date: 2016/02/08
+ */
+
+package edu.Concordia.Eternity.Algorithm;
+
+
+public class NaturalLogarithm{
+	double y = 0;
+	double m = 0;
+	
+	//Calculate the natural logarithm of x and the precision is 10^-n
+	public double Calculate(double x,double n) {
+		
+		
+		//If x<=0, return false
+		
+		if(x<=0){
+			System.out.println("False and x should be positive number!");
+		}
+		
+		//If 0<x<2, use Taylor series to compute lnx directly
+		
+		else if(x>0 && x<2){
+			double a=x-1;
+			for(int i=1;i<=n;i++){
+				y=y+Math.pow(-1,i-1)*Math.pow(a,i)/i;
+			}	
+		}
+		
+		//If x>=2, use x/e to map x to interval (0,2) and then compute lnx
+		
+		else{
+			while(x>=2){
+				m=m+1;
+				x=x/Math.E;
+			}
+				double b=x-1;
+				for(int j=1;j<=n;j++){
+					y=y+Math.pow(-1,j-1)*Math.pow(b,j)/j;
+				}
+				y=y+m;			
+			}
+		return y;
+		}
+}
