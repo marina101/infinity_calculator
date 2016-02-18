@@ -1,6 +1,8 @@
 
 public class NaturalExponential {
 	
+	final static double E = 2.718281828459045;
+	
 	/**
 	 * Gives absolute value of an int.
 	 * 
@@ -35,7 +37,7 @@ public class NaturalExponential {
 	 * @return
 	 */
 	private static double integerExp(double base, int power) {
-		assert power >= 0 : "Negative Power ";
+		assert power >= 0 : "Negative Power.";
 		if (power == 0)
 			return 1;
 		if (power == 1)
@@ -53,9 +55,8 @@ public class NaturalExponential {
 	 * @param n
 	 * @return
 	 */
-	public static double factorial (int n) {
-		if (n < 0)
-			throw new NumberFormatException();
+	private static double factorial (int n) {
+		assert n > 0: "Negative Factorial.";
 		
 		double result = 1;
 		
@@ -73,16 +74,17 @@ public class NaturalExponential {
 	 * @return
 	 */
 	private static double naturalExp(double power) {
-		int numberOfTerms = 100;
+		int NUMBER_OF_TERMS = 175;
 		double result = 0;
 		int powersOf2 = 0;
 		
-		while (power > 10) {
+		while (power > 1) {
 			power /= 2;
 			powersOf2++;
 		}
-			
-		for (int i = 0; i < numberOfTerms; i++) {
+		
+		
+		for (int i = 0; i < NUMBER_OF_TERMS; i++) {
 			result = result + (integerExp(power, i) / factorial(i));
 		}
 		
@@ -110,10 +112,10 @@ public class NaturalExponential {
 	}
 	
 	public static void main(String[] args) {
-		double a = -10;
+		double a = -50;
 		final double PRECISION = 0.0000000001;
 		
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 100; i++) {
 			long startTime = System.nanoTime();
 			double calculatedE = exp(a);
 			double javaE = Math.exp(a);
@@ -125,24 +127,27 @@ public class NaturalExponential {
 				System.out.println("Bad. Difference is " + difference + " at " + a);
 			}
 			
-			switch(i) {
-			case 10:
-				a = 1.0;
-				break;
-			case 20:
-				a = 11.0;
-				break;
-			case 30:
-				a = 21.0;
-				break;
-			case 40:
-				a = 31.0;
-				break;
-			default:
-				a++;
-			}
+			
+			a++;
+			
 			long endTime = System.nanoTime();
 			System.out.println(((endTime - startTime)));
+		}
+		
+		for (int i = 0; i < 50; i++) {
+			double intDiff = abs(integerExp(2.71, i) - Math.pow(2.71, i));
+			System.out.println(intDiff);
+		}
+		
+		System.out.println(Math.E);
+		
+		double x = 1;
+		double n = 9;
+		NaturalLogarithm test = new NaturalLogarithm();
+		
+		for (int i = 0; i < 25; i++) {
+			System.out.println(Math.abs(test.Calculate(x, n) - Math.log(x)));
+			x++;
 		}
 		
 	}
