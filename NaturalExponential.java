@@ -111,45 +111,6 @@ public class NaturalExponential {
 		return naturalExp(power);
 	}
 	
-	public static void main(String[] args) {
-		double a = -50;
-		final double PRECISION = 0.0000000001;
-		
-		for (int i = 0; i < 100; i++) {
-			long startTime = System.nanoTime();
-			double calculatedE = exp(a);
-			double javaE = Math.exp(a);
-			double difference = Math.abs(calculatedE - javaE);
-			
-			if (difference < PRECISION) {
-				System.out.println("Good. Difference is " + difference + " at " + a);
-			} else {
-				System.out.println("Bad. Difference is " + difference + " at " + a);
-			}
-			
-			
-			a++;
-			
-			long endTime = System.nanoTime();
-			System.out.println(((endTime - startTime)));
-		}
-		
-		for (int i = 0; i < 50; i++) {
-			double intDiff = abs(integerExp(2.71, i) - Math.pow(2.71, i));
-			System.out.println(intDiff);
-		}
-		
-		System.out.println(Math.E);
-		
-		double x = 1;
-		double n = 9;
-		NaturalLogarithm test = new NaturalLogarithm();
-		
-		for (int i = 0; i < 25; i++) {
-			System.out.println(Math.abs(test.Calculate(x, n) - Math.log(x)));
-			x++;
-		}
-		
-	}
+
 
 }
