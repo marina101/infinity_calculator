@@ -83,8 +83,8 @@ public class Evaluator {
 	/**
 	 * Divides the program up into tokens into a queue of Strings to be examined with the evaluator method.
 	 * 
-	 * Note the tokenizer does not allow for whitespace, relies on having the no whitespace, nor any error in how the uniary functions are spelled,
-	 * It assumed that numbers will be formatted correctly (i.e. decimals will have only 0 or 1 decimal in them.
+	 * Note the tokenize method does not allow for whitespace, relies on having the no whitespace, nor any error in how the unary functions are spelled,
+	 * It assumed that numbers will be formatted correctly (i.e. decimals will have only 0 or 1 decimal in them).
 	 * It is assumed that the input methods would disallow invalid strings from being passed.
 	 * 
 	 * @param exp
@@ -104,6 +104,16 @@ public class Evaluator {
 		for (int i = 0; i < exp.length(); i++) {
 			switch (exp.charAt(i)) {
 			case '1':
+				if (i < expression.length() - 2) {
+					if (exp.charAt(i + 1) == '0' && exp.charAt(i + 2) == '^') {
+						// Checks if the expression is 10^, and if so, will place a String "ten^" into the queue.
+						expressionQueue.add("ten^");
+						i += 2;
+						isOperatorNext = false;
+						isUniaryOpNext = true;
+						break;
+					}
+				}
 			case '2':
 			case '3':
 			case '4':
@@ -125,7 +135,6 @@ public class Evaluator {
 			case '+':
 			case '*':
 			case '/':
-			case '%':
 			case '^':
 				if (isANumber) {
 					expressionQueue.add(Evaluator.concatenate(digitQueue));
@@ -142,12 +151,13 @@ public class Evaluator {
 					isUniaryOpNext = true;
 					isOperatorNext = true;
 				}
-				if (isOperatorNext) {	/* This decides if the minus sign is a part of a (negative) negative number,
-										or if it is the negation operator. */
+				if (isOperatorNext) {
+					// If the next token is an operator, adds '-' to queue to be interpreted as operator.
 					expressionQueue.add(expression.substring(i, i + 1));
 					isUniaryOpNext = true;
 					isOperatorNext = false;
 				} else {
+					// If the next token is an a number, begins the
 					digitQueue.add(expression.substring(i, i + 1));
 					isANumber = true;
 					break;
@@ -162,8 +172,12 @@ public class Evaluator {
 				expressionQueue.add(expression.substring(i, i + 1));
 				break;
 			case 'e':
-				expressionQueue.add(E);
-				isOperatorNext = true;
+				if (expression.charAt(i + 1) == '^') {
+					// Checks if the expression is "e^", and if so, place the String "exp^" to the queue
+					expressionQueue.add("exp^");
+					i++;
+					isOperatorNext = false;
+				}
 				break;
 			case 'c':
 				if (!isUniaryOpNext)
@@ -192,19 +206,21 @@ public class Evaluator {
 			case 'l':
 				if (!isUniaryOpNext)
 					throw new InvalidExpressionException();
-				
-				if(i < expression.length() - 2) {
-					if (expression.charAt(i + 1) == 'o' && expression.charAt(i + 2) == 'g') {
-						expressionQueue.add("log");
-						isOperatorNext = false;
-						i += 2;
-						break;
-					} else if (expression.charAt(i + 1) == 'n') {
+				if (i < expression.length() - 1) {
+					if (expression.charAt(i + 1) == 'n') {
 						expressionQueue.add("ln");
 						isOperatorNext = false;
 						i++;
 						break;
 					} 
+				}
+				if (i < expression.length() - 2) {
+					if (expression.charAt(i + 1) == 'o' && expression.charAt(i + 2) == 'g') {
+						expressionQueue.add("log");
+						isOperatorNext = false;
+						i += 2;
+						break;
+					}
 				}
 			default:
 				throw new InvalidExpressionException();
@@ -236,7 +252,7 @@ public class Evaluator {
 	 * Takes a queue of String, each representing a token of operators, brackets and integers and produces a double, if valid.
 	 * 
 	 * @param expressionQueue A queue of Strings consisting of tokens of the expression.
-	 * @return double The result of the expression.
+	 * @return The result of the expression.
 	 * @throws InvalidExpressionException If somehow there is still more results to be calculated.
 	 * @throws EmptyStackException If there is a mismatch of brackets or operators without the proper operands.
 	 * @throws NumberFormatException If an operand exceeds the allowed range of the java double (i.e. 1.40129846432481707E-45 to 3.40282346638528860E+38).
@@ -291,9 +307,9 @@ public class Evaluator {
 	/**
 	 * Takes the current operator and a stack of numbers and returns the resulting number.
 	 * 
-	 * @param currentOperator
-	 * @param theNumbers
-	 * @return
+	 * @param currentOperator String representing the current operator.
+	 * @param theNumbers A stack of numbers, implemented as Double.
+	 * @return Double The result of the operation.
 	 * @throws NumberFormatException
 	 * @throws IllegalArgumentException
 	 * @throws InvalidExpressionException
@@ -336,6 +352,10 @@ public class Evaluator {
 			return Math.tan(theNumbers.pop());
 		} else if (currentOperator.equals("log")) {
 			return Math.log10(theNumbers.pop());
+		} else if (currentOperator.equals("ten^")) {
+			return Math.pow(10, theNumbers.pop());
+		} else if (currentOperator.equals("exp^")) {
+			return Math.exp(theNumbers.pop());
 		}
 
 		return Math.log(theNumbers.pop());
@@ -348,8 +368,8 @@ public class Evaluator {
 	 * @return
 	 */
 	private static boolean isBinary(String operator) {
-		if (operator.equals("sqrt") || operator.equals("sin") || operator.equals("cos") || operator.equals("tan") || operator.equals("csc") || operator.equals("sec") ||
-			operator.equals("sec") || operator.equals("cot") || operator.equals("log") || operator.equals("ln") || operator.equals("cbrt"))
+		if (operator.equals("sqrt") || operator.equals("sin") || operator.equals("cos") || operator.equals("tan") ||
+			operator.equals("log") || operator.equals("ln") || operator.equals("ten^") || operator.equals("exp^"))
 			return false;
 		
 		return true;
@@ -368,10 +388,11 @@ public class Evaluator {
 			return 1;
 		else if (operator.equals("*") || operator.equals("/") || operator.equals("%"))
 			return 2;
-		else if (operator.equals("sqrt") || operator.equals("sin") || operator.equals("cos") || operator.equals("tan") || operator.equals("csc") || operator.equals("sec") ||
-				 operator.equals("sec") || operator.equals("cot") || operator.equals("log") || operator.equals("ln") || operator.equals("cbrt"))
+		else if (operator.equals("sqrt") || operator.equals("sin") || operator.equals("cos") || 
+				 operator.equals("tan") || operator.equals("log") || operator.equals("ln"))
 			return 3;
 		
+		// Exponential operators get precedence of 4.
 		return 4;
 	}
 }
