@@ -42,7 +42,7 @@ public class NaturalLogarithm{
 		else{
 			while(x>=2){
 				m=m+1;
-				x=x/2.718281828459045;
+				x=x/NaturalExponential.exp(1);
 			}
 				double b=x-1;
 				for(int j=1;j<=1000;j++){
