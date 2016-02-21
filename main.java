@@ -8,32 +8,26 @@ public class main {
 		Scanner input = new Scanner(System.in);
 
 		System.out.print("Enter the base number: ");
-		double base = input.nextInt();
+		double x = input.nextInt();// base-number
 
 		System.out.print("Enter the base power: ");
-		double basePow = input.nextInt();
+		double y = input.nextInt();// base-power
 
 		power access = new power();
 
-		System.out.print(base + " to the power of " + basePow + " is: " + access.power(base, basePow));
+		System.out.print(x + " to the power of " + y + " is: " + access.power(x, y));
 
 	}
 
 	public static class power {
-		public static double power(double base, double basePow) {
-
-			if (basePow == 0) {
-				return 1;
-			} else if (basePow == 1) {
-				return base;
-			} else if (basePow > 1) {
-				return base * power(base, basePow - 1);
-			} else {
-
-				return 1 / power(base, -1 * basePow);
+		public double power(double x, double y) {
+			if (x == 0) return 0; // when base- number is zero the output will be zero
+			if (y == 0) return 1; // when base-power is zero the output will be one 
+			if(y<0) return 1/power(x, -y); // handling the negative power
+			return x * power(x, y - 1);
 			}
-
-		}
-
 	}
+
+
+
 }
