@@ -2,7 +2,7 @@
 #infinity_calculator#
 
 Infinity scientific calculator for computing transcendental functions - a software engineering group project 
-Using the Calculator
+
 #Table of Contents#
 
     Starting the calculator
