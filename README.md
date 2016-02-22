@@ -1,23 +1,23 @@
 
-infinity_calculator
+#infinity_calculator#
 
-Infinity scientific calculator for computing transcendental functions - a software engineering group project - IN PROGRESS
+Infinity scientific calculator for computing transcendental functions - a software engineering group project 
 Using the Calculator
-Table of Contents
+#Table of Contents#
 
     Starting the calculator
     Entering numbers
     Doing calculations
 
-Starting the calculator
+#Starting the calculator#
 
 To start the calculator, press the calculator icon on the Android app screen.
 
-Entering numbers
+#Entering numbers#
 
 When entering a number, pressing +/- will change the sign of the number. Pressing . place the decimal point in that number.
 
-Doing calculations
+#Doing calculations#
 
 To do a calculation, follow these steps:
 
