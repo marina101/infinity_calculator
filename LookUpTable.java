@@ -1,5 +1,3 @@
-package edu.Concordia.Eternity.Tools;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
