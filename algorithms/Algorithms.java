@@ -1,4 +1,3 @@
-import java.util.List;
 
 
 public class Algorithms {
@@ -39,39 +38,26 @@ public class Algorithms {
 	
 	
 	/**
+	 * This method calculates the square root of n.
 	 * 
-	 * 
-	 * @param
-	 * @return
+	 * @param value of n
+	 * @return value of square root of n
 	 */
-	public static double stdDeviation(List<Double> values) {
-		 
-		double valueSum = 0;
-		double valueSumSquareDifference = 0;		
-		double valueCount = 0;
-		double valueAverage = 0;
-		double standardDeviation = 0;
-				
-		// Calculates the average value
-		
-		for (double value : values) {
-			valueSum += value;
-			valueCount++;
+	public static double sqrt(double n) {
+		if (n < 0) {
+			throw new NumberFormatException();
 		}
 		
-		valueAverage = valueSum / valueCount;
-
-		// Calculates the Standard Deviation
+		final double PRECISION = 0.0000000001;
+		double guess = 10;
+		double next = 0;
 		
-		for(double value : values) {
-			double valueSquareDifference = power((value - valueAverage),2);
-			valueSumSquareDifference += valueSquareDifference;
-		}	
-	
-		standardDeviation = power((valueSumSquareDifference / valueCount) , 0.5);
+		while (abs(guess - next) > PRECISION) {
+			next = n / guess;
+			guess = (guess + next) / 2;
+		}
 		
-		return standardDeviation;
-		
+		return guess;
 	}
 	
 	
@@ -79,7 +65,7 @@ public class Algorithms {
 	 * This method calculates the natural logarithm of x with precision 10^-n
 	 * 
 	 * @param value of x
-	 * @return
+	 * @return value of 10^-n
 	 */	
 	public static double natLog(double x) {
 		
@@ -89,7 +75,7 @@ public class Algorithms {
 		//If x<=0, return false because x should be positive real number
 		
 		if (x <= 0) {
-			System.out.println("False and x should be positive number!");
+			System.err.println("ERROR: False and x should be positive number!");
 		}
 		
 		//If 0<x<2, use Taylor series to compute ln(x) directly
@@ -98,7 +84,7 @@ public class Algorithms {
 			
 			double a = x - 1;
 			for (int i = 1; i <= 1000; i++) {
-				y = y + power(-1,i-1) * power(a,i) / i;
+				y = y + integerPower(-1, i-1) * integerPower(a, i) / i;
 			}
 		}
 		
@@ -109,12 +95,12 @@ public class Algorithms {
 				m = m + 1;
 				x = x / natExp(1);
 			}
-				double b = x - 1;
-				for(int j=1; j <= 1000; j++) {
-					y = y + power(-1,j-1) * power(b,j) / j;
-				}
-				y = y + m;
+			double b = x - 1;
+			for (int j = 1; j <= 1000; j++) {
+				y = y + integerPower(-1, j-1) * integerPower(b, j) / j;
 			}
+			y = y + m;
+		}
 		
 		return y;
 		
@@ -123,28 +109,74 @@ public class Algorithms {
 	
 	
 	/**
+	 * This method raises x to the power of y.
 	 * 
-	 * 
-	 * @param 
-	 * @return 
+	 * @param value of x
+	 * @param value of y
+	 * @return value of x^y
 	 */	
-	public static double power(double base, double basePow) {
-
-		if (basePow == 0) {
+	 public static double power(double x, double y){
+		
+		double a = 1;
+		double sum = 1;
+		double i = 1;
+		
+		if (y == 0) {
+			if (x < 0) {
+				return -1;
+			}
 			return 1;
-		} 
-		if (basePow == 1) {
-			return base;
-		} 
-		if (basePow > 1) {
-			return base * power(base, basePow - 1);
 		}
-
-		return 1 / power(base, -1 * basePow);
+		
+		if (x == 0) {
+			
+			if (y < 0) {
+				// Return an error.
+			}
+			
+			if (y == 0) {
+				return 1;
+			}
+			
+			return 0;
+			
+		}
+		
+		
+		// When power < 0, we return 1 / power(x, -y).
+		
+		if (y < 0) {
+			return 1 / power(x, -y);
+		}
+		
+		double j = natLog(x) * y;
+		
+		/* Using Taylor Series to implement x^y
+		 * x^y = 1 + (lnx)y + (((lnx)^2)y^2)/2! + ..... + (((lnx)^n)y^n)/n!
+		 * j = (lnx)y
+		*/
+		
+		while (a > 1e-15) {
+			a = a * j / i;
+			sum = sum + a;
+			i++;
+		}
+		
+		// Using optimization method to get approximate result.
+		double s = sum % 1;
+		
+        if (s > 0.999999999){
+        	sum = sum - s + 1;
+        }
+        else if (s < 0.000000001){
+            sum = sum - s;
+        }
+        
+        return sum;
 	}
-
 	
 	
+	 
 	/**
 	 * This method calculates 10^x, using algorithm 10^x = e^(x*ln10)
 	 * 
@@ -153,52 +185,39 @@ public class Algorithms {
 	 */	
 	public static double tenEx(double value) {
 		
-		return natExp(value * LN10);
+		return exp(value * LN10);
 		
 	}
+
 	
 	
 	/**
-	 * Calculates the natural exponent with a Talyor series.
+	 * Finds the natural exponent of a double.
 	 * 
-	 * @param power
-	 * @return
-	 */
-	public static double natExp(double power) {
-		int NUMBER_OF_TERMS = 175;
-		double result = 0;
-		int powersOf2 = 0;
-		
-		while (power > 1) {
-			power /= 2;
-			powersOf2++;
+	 * @param value of power
+	 * @return value of e^power
+	 */	
+	public static double exp(double power) {
+		if (power < 0) {
+			power = -power;
+			return 1 / natExp(power);
 		}
 		
-		
-		for (int i = 0; i < NUMBER_OF_TERMS; i++) {
-			result = result + (integerExp(power, i) / factorial(i));
-		}
-		
-		while (powersOf2 > 0) {
-			result *= result;
-			powersOf2--;
-		}
-		
-		return result;
+		return natExp(power);
 	}
+	
 	
 
 	
 	/**
 	 * This method calculates the sine value of an angle using the CORDIC algorithm
 	 * 
-	 * @param 	angle expressed in radiant
-	 * @return 	sine value
+	 * @param 	value of angle expressed in radiant
+	 * @return 	sine value of angle
 	 */
 	public static double sin(double angle) {
 
 		int flip = 1;
-		
 		
 		while ((angle < (-PI/2.0)) || (angle > (PI/2.0))) {
 			flip = -flip;
@@ -251,12 +270,12 @@ public class Algorithms {
 /************************ PRIVATE METHODS ****************************/
 
 	/**
-	 * Gives absolute value of a double float.
+	 * This method gives the absolute value of a double float.
 	 * 
-	 * @param n
-	 * @return
+	 * @param value of n
+	 * @return absolute value of n
 	 */	
-	public static double abs(double n) {
+	private static double abs(double n) {
 		if (n < 0)
 			return -n;
 		
@@ -266,10 +285,10 @@ public class Algorithms {
 	
 	
 	/**
-	 * Returns the factorial of a given n.
+	 * This method returns the factorial of a given n.
 	 * 
-	 * @param n
-	 * @return
+	 * @param value of n
+	 * @return factorial value of n
 	 */
 	private static double factorial (int n) {
 		assert n > 0: "Negative Factorial.";
@@ -286,15 +305,16 @@ public class Algorithms {
 	
 	
 	/**
-	 * Returns a double to an integer power.
+	 * This method returns a double to an integer power.
 	 * 
-	 * @param base
-	 * @param power
-	 * @return
+	 * @param value of base
+	 * @param value of power
+	 * @return value of base^power
 	 */
 	private static double integerExp(double base, int power) {
 		
 		assert power >= 0 : "Negative Power.";
+		
 		if (power == 0) {
 			return 1;
 		}
@@ -302,10 +322,63 @@ public class Algorithms {
 			return base;
 		}
 		if (power % 2 == 1) {
-			return base * integerExp(base * base, power);
+			return base * integerExp(base * base, (power - 1)/2);
 		}
 		
 		return integerExp(base * base, power / 2);
+	}
+
+	
+	
+	/**
+	 * This method calculates the natural exponent with a Talyor series.
+	 * 
+	 * @param power
+	 * @return value of the natural exponent of power.
+	 */
+	private static double natExp(double power) {
+		int NUMBER_OF_TERMS = 175;
+		double result = 0;
+		int powersOf2 = 0;
+		
+		while (power > 1) {
+			power /= 2;
+			powersOf2++;
+		}
+		
+		
+		for (int i = 0; i < NUMBER_OF_TERMS; i++) {
+			result = result + (integerExp(power, i) / factorial(i));
+		}
+		
+		while (powersOf2 > 0) {
+			result *= result;
+			powersOf2--;
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * This method raises x to the power y but only accept integer based power values.
+	 * 
+	 * @param value of x
+	 * @param value of y
+	 * @return x^y
+	 */	
+	private static double integerPower(double x, int y) {
+		if (y == 0) { 
+			return 1; // When base-power is zero the output will be one 
+		}
+		if (x == 0) {
+			return 0; // When base- number is zero the output will be zero
+		}
+		if (y < 0)  {
+			return 1 / integerPower(x, -y); // Handling the negative power
+		}
+		
+		return x * integerPower(x, y - 1);
 	}
 
 	
