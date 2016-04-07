@@ -2,12 +2,13 @@ package com.example.user.calculatorv2;
 
 /**
  * Created on 2016-02-22.
- * Algorithms written by: Ricardo Bezerra De Oliveira
-                          Christopher Birkbeck
-                          Marina Chirchikova
-                          Jerome Charriere
-                          Tarnum Sharma
-                          Shuai Chen
+ * Algorithms written by: 
+ * Christopher Birkbeck
+ * Jerome Charriere
+ * Marina Chirchikova
+ * Ricardo Bezerra De Oliveira
+ * Shuai Chen
+ * Tarnum Sharma                          
  */
 public class Algorithms {
     private static final double LN10 = 	2.3025850929940457;
@@ -16,14 +17,14 @@ public class Algorithms {
 
     private static LookUpTable KTable;
     private static LookUpTable atanTable;
-    private static int 			sinePrecisionLevel;
+    private static int sinePrecisionLevel;
 
 
 
 
     static {
 
-        /*** CORDIC related operations ***/
+        /* CORDIC related operations */
 
         // Load up tables in memory.
 
@@ -159,10 +160,11 @@ public class Algorithms {
 
         double j = natLog(x) * y;
 
-		/* Using Taylor Series to implement x^y
+		/* 
+		 *Using Taylor Series to implement x^y
 		 * x^y = 1 + (lnx)y + (((lnx)^2)y^2)/2! + ..... + (((lnx)^n)y^n)/n!
 		 * j = (lnx)y
-		*/
+		 */
 
         while (a > 1e-15) {
             a = a * j / i;
@@ -277,9 +279,9 @@ public class Algorithms {
     }
 
 
-/************************ PRIVATE METHODS ****************************/
+    /* PRIVATE METHODS */
 
-    /*
+    /**
      * This method gives the absolute value of a double float.
      *
      * @param n = value of n
@@ -294,7 +296,7 @@ public class Algorithms {
 
 
 
-    /*
+    /**
      * This method returns the factorial of a given n.
      *
      * @param value of n
@@ -316,7 +318,7 @@ public class Algorithms {
 
 
 
-    /*
+    /**
      * This method returns a double to an integer power.
      *
      * @param value of base
@@ -342,8 +344,8 @@ public class Algorithms {
 
 
 
-    /*
-     * This method calculates the natural exponent with a Talyor series.
+    /**
+     * This method calculates the natural exponent with a Taylor series.
      *
      * @param power
      * @return value of the natural exponent of power.
@@ -372,7 +374,7 @@ public class Algorithms {
     }
 
 
-    /*
+    /**
      * This method raises x to the power y but only accept integer based power values.
      *
      * @param value of x

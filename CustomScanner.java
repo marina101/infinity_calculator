@@ -1,5 +1,16 @@
 package com.example.user.calculatorv2;
 
+/**
+ * Scanner that proceed to the lexical analysis of a mathematical expression.
+ * 
+ * Mathematical expressions awaiting tokenization must be set using the setInput(String str) method.
+ * The tokenization process is carried out by the nextToken() method.
+ * Any call to this method will lead to the consumption and processing of the characters within the 
+ * mathematical expression until either forming a token or encountering an error.
+ * 
+ * @author Jerome Charriere
+ */
+ 
 class CustomScanner {
 
 	private String 	m_input;
@@ -8,11 +19,22 @@ class CustomScanner {
 	
 	private static final int EOE = 0;
 	
+	
+	
+	/**
+	 * Class constructor.
+	 */
 	public CustomScanner() {
 		
 	}
 	
 	
+	
+	/**
+	 * Prepare the scanner for the tokenization of a mathematical expression.
+	 * 
+	 * @param String to scan.
+	 */
 	public void setInput(String str) {
 		
 		m_input = str;
@@ -21,6 +43,14 @@ class CustomScanner {
 		
 	}
 	
+	
+	
+	/**
+	 * Returns the next character in the expression and increase the cursor position by one.
+	 * If the end of the expression has been reached, the method will return the value EOE.
+	 * 
+	 * @return Character at the current cursor position.
+	 */
 	private char nextChar() {
 		
 		// There is not need to continue if the scanner has completed scanning the entire expression.
@@ -41,6 +71,15 @@ class CustomScanner {
 	}
 	
 	
+	
+	/**
+	 * Helper method.
+	 * Creates a token object.
+	 * 
+	 * @param type Type of the token.
+	 * @param dval Value associated with the token. This value should be set to zero if the token is not supposed to have any value.
+	 * @param opInfo OperatorInfo Instance describing the type of operator associated to the token. This argument should be left null if the type of the token is not an operator.
+	 */
 	private Token createToken(int type, double dval, OperatorInfo opInfo) {
 		
 		return new Token(type, dval, opInfo);
@@ -48,6 +87,12 @@ class CustomScanner {
 	}
 	
 	
+	
+	/** 
+	 * Indicate if the scanner has finished scanning the entire mathematical expression.
+	 * 
+	 * @return True if the scanner has finished scanning the entire mathematical expression. False otherwise.
+	 */
 	public boolean isScanningComplete() {
 		
 		return m_scanningComplete;
@@ -55,6 +100,10 @@ class CustomScanner {
 	}
 	
 	
+	
+	/**
+	 *  Rewind the reading cursor by one character
+	 */
 	private void backChar() {
 		
 		m_cursor--;
@@ -63,7 +112,13 @@ class CustomScanner {
 	
 	
 	
-	
+	/**
+	 * Process and consume characters of the mathematical expression until forming a new token.
+	 * If the scanner has finished processing the mathematical expression, it will return a token instance of type T_EOE.
+	 * 
+	 * @return Token instance.
+	 * @throws MathException if the scanner has encountered an invalid or badly formed lexical element.
+	 */
 	public Token nextToken() throws MathException {
 		
 		char c = nextChar();
@@ -93,7 +148,7 @@ class CustomScanner {
 			}
 			
 			// We have encountered an element that is not a letter: we rewind by one character.
-            backChar();
+            		backChar();
 			
 			// Check if keyword is part of the set of defined mathematical functions.
 			if (stringBuffer.equals("sqrt")) 	{ return createToken(Token.T_FUNCTION_SQRT, 0, null); }
@@ -155,7 +210,7 @@ class CustomScanner {
 		if (c == '^') { return createToken(Token.T_OPERATOR_POW, 0, new OperatorInfo(4, false)); }
 		
 		// Error: unknown token.
-		throw new MathException("Unrecognized lexical element");
+		throw new MathException("Unrecognised lexical element");
 		
 	}
 		

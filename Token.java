@@ -1,5 +1,11 @@
 package com.example.user.calculatorv2;
 
+/**
+ * Bears informations related to a lexical element encountered in a mathematical expression.
+ * 
+ * @author Jerome Charriere
+ */
+ 
 public class Token {
 
 	public static final int T_NUMBER 				= 0;
@@ -22,6 +28,15 @@ public class Token {
 	private double 			m_dval;
 	private OperatorInfo 	m_opInfo;
 	
+	
+	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param type Type of the token. 
+	 * @param dval Value associated with the token. This value should be set to zero if the token is not supposed to have any value.
+	 * @param opInfo Instance describing the type of operator associated to the token. This argument should be left null if the type of the token is not an operator.
+	 */
 	public Token(int type, double dval, OperatorInfo opInfo) {
 		
 		m_type = type;
@@ -30,6 +45,13 @@ public class Token {
 		
 	}
 	
+	
+	
+	/**
+	 * Checks if the token is a function.
+	 * 
+	 * @return True if the token is a function. False otherwise.
+	 */
 	public boolean isFunction() {
 		
 		if ((m_type == T_FUNCTION_SQRT)
@@ -42,6 +64,13 @@ public class Token {
 		return false;
 	}
 	
+	
+	
+	/**
+	 * Checks if the token is an operator.
+	 * 
+	 * @return True if the token is an operator. False otherwise.
+	 */	
 	public boolean isOperator() {
 		
 		if ((m_type == T_OPERATOR_PLUS)
@@ -58,6 +87,13 @@ public class Token {
 		return false;	
 	}
 	
+	
+	
+	/**
+	 * Checks if the token is a unary operator.
+	 * 
+	 * @return True if the token is a unary operator. False otherwise.
+	 */
 	public boolean isUnary() {
 		if ((m_type == T_OPERATOR_UNARY_PLUS)
 				|| (m_type == T_OPERATOR_UNARY_MINUS)) {
@@ -70,23 +106,48 @@ public class Token {
 	}
 	
 	
+	
+	/**
+	 * Returns the type of the token.
+	 * 
+	 * @return The type of the token.
+	 */	
 	public int getType() {
 		return m_type;
 	}
 	
 	
+	
+	/**
+	 * Returns the value associated with the token.
+	 * 
+	 * @return The value associated with the token.
+	 */
 	public double getValue() {
 		return m_dval;
 	}
 	
 	
+	
+	/**
+	 * Returns the possible OperatorInfo instance associated with the token.
+	 * 
+	 * @return The possible OperatorInfo instance associated with the token.
+	 */
 	public OperatorInfo getOperatorInfo() {
 		
 		return m_opInfo;
 		
 	}
 	
-	// Return a string indicating the type of the token.
+	
+	
+	/**
+	 * Returns a string giving some informations about the token.
+	 * Useful for debugging purposes.
+	 * 
+	 * @return Returns a string indicating the type of the token and the possible value associated with it.
+	 */
 	public String toString() {
 		
 		String typeStr = "";
